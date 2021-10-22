@@ -67,6 +67,8 @@ Edit the config with `btfs config edit`, then change the IP addresses to the loc
 	...
 ```
 
+I found my router die a lot. I may have fixed it with adjusting the way my node connects to the network - i.e. dont allow too many peers and only be a client.
+
 Find the Swarm High and LowWater. Change them as follows
 
 ```language-json
@@ -99,6 +101,6 @@ You should probably add that to your `crontab` for reboot:
 @reboot sleep 15 && /home/pi/btfs/bin/btfs daemon > /tmp/btfs.log 2>&1
 ```
 
-Now you can connect to webui: http://192.168.1.185:5001/webui
+# Connect from your main computer
 
-You can also continue the host configuration: http://192.168.1.185:5001/hostui
+You will need to continue the host configuration: http://192.168.1.185:5001/hostui
