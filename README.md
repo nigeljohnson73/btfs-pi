@@ -104,3 +104,25 @@ You should probably add that to your `crontab` for reboot:
 # Connect from your main computer
 
 You will need to continue the host configuration: http://192.168.1.185:5001/hostui
+
+# Possible better configurations
+
+I have not tried these, but they would reduce some of the complexity and knowledge. They came from the bottom of [this website](https://medium.com/tron-foundation/configure-btfs-daemon-bd97f9c2e7cd) and if they work will remove the requirement to edit the config directly, and, more importantly, not know your IP address.
+
+```language-console
+btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+btfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST", "OPTIONS"]'
+btfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+
+btfs config Addresses.API '/ip4/0.0.0.0/tcp/5001'
+btfs config Addresses.Gateway '/ip4/0.0.0.0/tcp/8080'
+```
+
+Extending the notes above, these should work as well
+
+```language-console
+btfs config Addresses.RemoteAPI '/ip4/0.0.0.0/tcp/5101'
+btfs config Swarm.ConnMgr.HighWater '100'
+btfs config Swarm.ConnMgr.LowWater '50'
+btfs config Routing.Type 'dhtclient'
+```
