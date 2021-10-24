@@ -122,7 +122,7 @@ Extending the notes above, these should work as well
 
 ```language-console
 btfs config Addresses.RemoteAPI '/ip4/0.0.0.0/tcp/5101'
-btfs config Swarm.ConnMgr.HighWater '100'
-btfs config Swarm.ConnMgr.LowWater '50'
+btfs config --json Swarm.ConnMgr.HighWater '100'
+btfs config --json Swarm.ConnMgr.LowWater '50'
 btfs config Routing.Type 'dhtclient'
 ```
