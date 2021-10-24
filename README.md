@@ -147,7 +147,10 @@ If you see stats, the host side is done, if you see it complain about not being 
 
 # Connect from your main computer
 
-You will need to continue the host configuration using the IP address: http://192.168.1.185:5001/hostui
+You will need to continue the host configuration using the IP address: http://192.168.1.185:5001/hostui and follow the onscreen prompts.
+
+You also have the standard UI: http://192.168.1.185:5001/webui
+
 <!--
 # Possible better configurations
 
