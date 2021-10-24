@@ -7,13 +7,29 @@ This guide assumes you have a Pi and can log into it via SSH, and have enough st
   
   * Raspberry Pi 4b (2GB RAM version) configued to boot from SSD
   * 1TB Western Digital blue M2 NVMe attached and loaded with the latest Raspian OS lite
-  * My router gave my Pi the IP Address 192.168.1.185 - I'll use this in the config
+  * I configured my Pi with the hostname `bttmnr.local` so I can connect to the host
 
-Because I'm not using the desktop version of Raspian OS, I want to use the WebUI from my main computer, so I'll need to configure that.
+Because I'm not using the desktop version of Raspian OS, I want to use the WebUI from my main computer, so I'll need to configure that in BTFS.
 
 Right, let's get started...
 
-# Update your Pi
+# Working out your IP address
+
+For me, having used the Raspberry Pi Imager, I set a hostname, so, connect to the Pi with that hostname, and get the IP directly.
+
+```language-console
+MyMac $ ssh pi@bttmnr.local
+...
+pi@bttmnr:~ $ hostname -I
+192.168.1.185
+pi@bttmnr:~ $ 
+```
+
+There is the IP address given to me by my router - '`192.168.1.185`' and I'll need to remember that for later. If you have multiple entries, it will be because you have additional interfaces configured (wireless and ethernet, or a VPN etc). Choose one and stick to it. I will assume that you know what you are doing here.
+
+The BTFS config probably had a way to serve out on the hostname, possibly by adding a line in the CORS stuff, but I have not experimented enough with that. 
+
+# Update the Pi
 
 If you have a super fresh install, the first thing to do was to ensure your Pi is at least as up to date as it can be.
 
@@ -44,19 +60,23 @@ export EDITOR=vi
 ```
 # Configure your repo.
 
-The default storage location is `~/.btfs` and you can change this later in the GUI. You will need to know you're local external IP address. The assumption for this guide is that this is `192.168.1.185`. 
+The default storage location is `~/.btfs` and you can change this later in the GUI. You will need to know you're local external IP address from above. Let's set that up so we can use it later.
 
-Initialise the repo, storage host and set the CORS stuff so you can access the web GUI from a separate computer - important if you are not running a desktop.
+```language-console
+export LOCALIP="192.168.1.185"
+```
+
+Initialise the repo, storage host and set the CORS stuff so you can access the web GUI from a separate computer. The quoting is odd for the first line, because I don't know how to do the variable expansion inside single quotes - which are specifically used to stop special character expansion.
 
 ```language-console
 btfs init
 btfs config profile apply storage-host
-btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://192.168.1.185:5001", "http://localhost:3000", "http://127.0.0.1:5001"]'
+btfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"http://${LOCALIP}:5001\", \"http://localhost:3000\", \"http://127.0.0.1:5001\"]"
 btfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST", "OPTIONS"]'
 btfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
-btfs config Addresses.API '/ip4/192.168.1.185/tcp/5001'
-btfs config Addresses.Gateway '/ip4/192.168.1.185/tcp/8080'
-btfs config Addresses.RemoteAPI '/ip4/192.168.1.185/tcp/5101'
+btfs config Addresses.API "/ip4/${LOCALIP}/tcp/5001"
+btfs config Addresses.Gateway "/ip4/${LOCALIP}/tcp/8080"
+btfs config Addresses.RemoteAPI "/ip4/${LOCALIP}/tcp/5101"
 btfs config --json Swarm.ConnMgr.HighWater '100'
 btfs config --json Swarm.ConnMgr.LowWater '50'
 btfs config Routing.Type 'dhtclient'
@@ -110,7 +130,7 @@ You should probably add that to your `crontab` for reboot:
 
 # Connect from your main computer
 
-You will need to continue the host configuration: http://192.168.1.185:5001/hostui
+You will need to continue the host configuration using the IP address: http://192.168.1.185:5001/hostui
 <!--
 # Possible better configurations
 
